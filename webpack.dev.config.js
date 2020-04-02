@@ -4,7 +4,7 @@ const webpack = require("webpack");
 
 module.exports = {
   entry: {
-    App: path.resolve(__dirname, "src/frontend/index.js")
+    home: path.resolve(__dirname, "src/frontend/index.js")
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -22,7 +22,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js|jsx$/,
         use: "babel-loader",
         exclude: /node_modules/
       },
