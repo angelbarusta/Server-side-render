@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const autoprefixer = require("autoprefixer");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 1111;
 
 module.exports = {
   entry: {
@@ -75,7 +75,7 @@ module.exports = {
           loader: "file-loader", //url-loader
           options: {
             //limit: 90000,
-            outputPath: "frontend/assets/"
+            outputPath: "frontend/assets/static"
           }
         }
       }

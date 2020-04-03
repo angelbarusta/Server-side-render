@@ -1,103 +1,85 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const autoprefixer = require("autoprefixer");
-const webpack = require("webpack");
+
+const PORT = process.env.PORT || 1111;
 
 module.exports = {
-  entry: "./src/frontend/index.js",
-  mode: "development",
+  entry: {
+    home: path.resolve(__dirname, "src/frontend/index.js")
+  },
   output: {
-    path: "/",
-    filename: "assets/app.js",
-    publicPath: "/"
+    path: path.resolve(__dirname, "dist"),
+    filename: "js/[name].js",
+    publicPath: `http://localhost:${PORT}/`,
+    chunkFilename: "js/[id].[chunkhash].js"
   },
-  resolve: {
-    extensions: [".js", ".jsx"]
+  devServer: {
+    // contentBase: path.resolve(__dirname, "dist"),
+    open: true,
+    hot: true,
+    port: PORT,
+    historyApiFallback: true
   },
-  optimization: {
-    splitChunks: {
-      chunks: "async",
-      name: true,
-      cacheGroups: {
-        vendors: {
-          name: "vendors",
-          chunks: "all",
-          reuseExistingChunk: true,
-          priority: 1,
-          filename: "assets/vendor.js",
-          enforce: true,
-          test(module, chunks) {
-            const name = module.nameForCondition && module.nameForCondition();
-            return chunks.some(
-              (chunks) =>
-                chunks.name !== "vendor" && /[\\/]node_modules[\\/]/.test(name)
-            );
-          }
-        }
-      }
-    }
-  },
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: "async",
+  //     name: true,
+  //     cacheGroups: {
+  //       vendors: {
+  //         name: "vendors",
+  //         chunks: "all",
+  //         reuseExistingChunk: true,
+  //         priority: 1,
+  //         filename: "assets/vendor/[name].[hash].js",
+  //         enforce: true,
+  //         test(module, chunks) {
+  //           const name = module.nameForcondition && module.nameForcondition();
+  //           return chunks.some(
+  //             (chunk) =>
+  //               chunk.name != "vendors" && /[\\/]node_modules[\\/]/.test(name)
+  //           );
+  //         }
+  //       }
+  //     }
+  //   }
+  // },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        enforce: "pre",
+        test: /\.js|jsx$/,
+        use: "babel-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.less$/,
+        use: ["style-loader", "css-loader", "less-loader"]
+      },
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.styl$/,
+        use: ["style-loader", "css-loader", "stylus-loader"]
+      },
+      {
+        test: /\.jpg|png|gif|woff|eot|ttf|svg|mp4|webm$/,
         use: {
-          loader: "eslint-loader"
-        }
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
-        test: /\.(s*)css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          "css-loader",
-          "postcss-loader",
-          {
-            loader: "sass-loader",
-            options: {
-              data: `
-                @import "${path.resolve(
-                  __dirname,
-                  "src/frontend/assets/styles/Vars.scss"
-                )}";
-                @import "${path.resolve(
-                  __dirname,
-                  "src/frontend/assets/styles/Media.scss"
-                )}";
-                @import "${path.resolve(
-                  __dirname,
-                  "src/frontend/assets/styles/Base.scss"
-                )}";
-              `
-            }
+          loader: "file-loader", //url-loader
+          options: {
+            //limit: 90000,
+            outputPath: "frontend/assets/static"
           }
-        ]
-      },
-      {
-        test: /\.(png|gif|jpg)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "assets/[hash].[ext]"
-            }
-          }
-        ]
+        }
       }
     ]
-  },
-  devServer: {
-    historyApiFallback: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -106,8 +88,12 @@ module.exports = {
         postcss: [autoprefixer()]
       }
     }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "public/index.html")
+    }),
     new MiniCssExtractPlugin({
-      filename: "assets/app.css"
+      filename: "dist/css/[name].[hash].css",
+      chunkFilename: "dist/css/[id].[hash].css"
     })
   ]
 };

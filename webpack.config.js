@@ -7,7 +7,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TersetJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 1111;
 
 module.exports = {
   entry: {
