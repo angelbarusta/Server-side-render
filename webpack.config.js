@@ -7,6 +7,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TersetJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const autoprefixer = require("autoprefixer");
+const webpack = require("webpack");
 
 module.exports = {
   entry: {
@@ -19,6 +20,27 @@ module.exports = {
     chunkFilename: "js/[id].[chunkhash].js"
   },
   optimization: {
+    splitChunks: {
+      chunks: "async",
+      name: true,
+      cacheGroups: {
+        vendors: {
+          name: "vendors",
+          chunk: "all",
+          reuseExistingChunk: true,
+          priority: 1,
+          filename: "assets/vendor/[name].[hash].js",
+          enforce: true,
+          test(module, chunks) {
+            const name = module.nameForcondition && module.nameForcondition();
+            return chunks.some(
+              (chunk) =>
+                chunk.name != "vendors" && /[\\/]node_modules[\\/]/.test(name)
+            );
+          }
+        }
+      }
+    },
     minimizer: [new TersetJSPlugin(), new OptimizeCSSAssetsPlugin()]
   },
   module: {
@@ -84,7 +106,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin.LoaderOptionsPlugin({
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.Plugin.LoaderOptionsPlugin({
       options: {
         postcss: [autoprefixer()]
       }
