@@ -5,7 +5,7 @@
   "scripts": {
     "server": "json-server --port 3001 --watch server/db.json --static ./dist",
     "seed": "node server/seed.js",
-    "esl": "nodemon src/server/index",
+    "esl": "nodemon --config src/server/index",
     "start": "webpack-dev-server --config ./webpack.dev.config.js --mode development",
     "build": "webpack --config ./webpack.config.js --mode production",
     "build:dll": "webpack --config ./webpack.dll.config.js --mode production"
@@ -60,7 +60,9 @@
     "url-loader": "^4.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-middleware": "3.7.2",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-hot-middleware": "2.25.0"
   },
   "eslintConfig": {
     "extends": "react-app"

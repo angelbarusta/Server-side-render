@@ -6,8 +6,8 @@ const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TersetJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const autoprefixer = require("autoprefixer");
-const webpack = require("webpack");
+
+const PORT = process.env.PORT || 3000;
 
 module.exports = {
   entry: {
@@ -16,31 +16,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "js/[name].[hash].js",
-    publicPath: "http://localhost:3001/",
+    publicPath: `http://localhost:/${PORT}/`,
     chunkFilename: "js/[id].[chunkhash].js"
   },
   optimization: {
-    splitChunks: {
-      chunks: "async",
-      name: true,
-      cacheGroups: {
-        vendors: {
-          name: "vendors",
-          chunk: "all",
-          reuseExistingChunk: true,
-          priority: 1,
-          filename: "assets/vendor/[name].[hash].js",
-          enforce: true,
-          test(module, chunks) {
-            const name = module.nameForcondition && module.nameForcondition();
-            return chunks.some(
-              (chunk) =>
-                chunk.name != "vendors" && /[\\/]node_modules[\\/]/.test(name)
-            );
-          }
-        }
-      }
-    },
     minimizer: [new TersetJSPlugin(), new OptimizeCSSAssetsPlugin()]
   },
   module: {
@@ -106,12 +85,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.Plugin.LoaderOptionsPlugin({
-      options: {
-        postcss: [autoprefixer()]
-      }
-    }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[hash].css",
       chunkFilename: "css/[id].[hash].css"
@@ -125,7 +98,7 @@ module.exports = {
     new AddAssetHtmlPlugin({
       filepath: path.resolve(__dirname, "dist/js/*.dll.js"),
       outputPath: "js",
-      publicPath: "http://localhost:3001/js"
+      publicPath: `http://localhost:${PORT}/js`
     }),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ["**/app.*"]
