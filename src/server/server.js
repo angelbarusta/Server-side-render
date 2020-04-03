@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import webpack from "webpack";
 
+import main from "../server/routes/main.js";
+
 dotenv.config();
 
 const ENV = process.env.NODE_ENV;
@@ -29,10 +31,7 @@ if (ENV === "development") {
   app.use(webpackHotMiddleWare(compiler));
 }
 
-app.get("*", (req, res) => {
-  const MOLDE = require("../../dist/index.html");
-  res.send(MOLDE);
-});
+app.get("*", (req, res) => main(req, res));
 
 app.listen(PORT, (err) => {
   if (err) console.error("ERROR.listen.PORT :", err);
