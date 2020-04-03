@@ -6,6 +6,7 @@ const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TersetJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: {
@@ -34,7 +35,9 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader
           },
 
-          "css-loader"
+          "css-loader",
+          "sass-loader",
+          "postcss-loader"
         ]
       },
       {
@@ -81,6 +84,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new HtmlWebpackPlugin.LoaderOptionsPlugin({
+      options: {
+        postcss: [autoprefixer()]
+      }
+    }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[hash].css",
       chunkFilename: "css/[id].[hash].css"
