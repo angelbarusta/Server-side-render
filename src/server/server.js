@@ -30,7 +30,8 @@ if (ENV === "development") {
 }
 
 app.get("*", (req, res) => {
-  res.send({ holamundo: true });
+  const MOLDE = require("../../dist/index.html");
+  res.send(MOLDE);
 });
 
 app.listen(PORT, (err) => {

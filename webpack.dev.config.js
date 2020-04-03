@@ -17,7 +17,7 @@ module.exports = {
     chunkFilename: "js/[id].[chunkhash].js"
   },
   devServer: {
-    contentBase: `http://localhost:${PORT}/`,
+    contentBase: path.resolve(__dirname, "dist"),
     open: true,
     hot: true,
     port: PORT,
