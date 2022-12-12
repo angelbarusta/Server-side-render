@@ -21,7 +21,7 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "history": "4.9.0",
     "nodemon": "1.19.1",
     "postcss-loader": "3.0.0",
